@@ -1,46 +1,97 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8"/>
-    <title>Chat Room</title>
-</head>
-<body>
-    <textarea id="chat-log" cols="100" rows="20"></textarea><br/>
-    <input id="chat-message-input" type="text" size="100"/><br/>
-    <input id="chat-message-submit" type="button" value="Send"/>
-</body>
-<script>
-    var roomName = {{ room_name_json }};
+{% extends 'base.html' %}
+{% load static %}
 
-    var chatSocket = new WebSocket(
-        'ws://' + window.location.host +
-        '/ws/chat/' + roomName + '/');
+{% block title %}Chat Room{% endblock %}
 
-    chatSocket.onmessage = function(e) {
-        var data = JSON.parse(e.data);
-        var message = data['message'];
-        document.querySelector('#chat-log').value += (message + '\n');
-    };
+{% block content %}
+    <div id="chat-log" class="chat">
+        {#  как показывать кеш сообщений? и где его хранить?  #}
+                {% for m in messages  %}
+{#                    {{ messages }}#}
+                    {% include "chat/message.html" with message=m.message avatarka=m.avatar_url author=m.author time=m.date %}
+                {% endfor %}
 
-    chatSocket.onclose = function(e) {
-        console.error('Chat socket closed unexpectedly');
-    };
+{#        <div class="message">#}
+{##}
+{#            <div class="message__author">#}
+{#                <div class="message__avatar"><img src="{{ user.avatar.url }}" height="30" width="30"></div>#}
+{#                <div class="message__name">{{ user }}</div>#}
+{#                <div class="message__time">{% now "jS F Y H:i" %}</div>#}
+{#            </div>#}
+{#            <div class="message__text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis dignissimos#}
+{#                dolore libero pariatur! Animi aut dolorem earum eum excepturi iure, laborum magnam minus nam, neque#}
+{#                pariatur saepe sint ullam. Ab amet consequuntur debitis delectus dicta dolorum eius facilis, fuga harum#}
+{#                id incidunt ipsum laborum modi necessitatibus quidem? Autem, deleniti facilis neque perferendis#}
+{#                perspiciatis totam. Cumque, voluptatem.#}
+{#            </div>#}
+{##}
+{#        </div>#}
 
-    document.querySelector('#chat-message-input').focus();
-    document.querySelector('#chat-message-input').onkeyup = function(e) {
-        if (e.keyCode === 13) {  // enter, return
-            document.querySelector('#chat-message-submit').click();
-        }
-    };
+    </div>
+    <div class="input">
+        <div class="input__attach btn"></div>
+        <input id="chat-message-input" type="text" value="" placeholder="Введите сообщение"/>
+        <div id="chat-message-submit" class="input__send btn"></div>
+    </div>
 
-    document.querySelector('#chat-message-submit').onclick = function(e) {
-        var messageInputDom = document.querySelector('#chat-message-input');
-        var message = messageInputDom.value;
-        chatSocket.send(JSON.stringify({
-            'message': message
-        }));
 
-        messageInputDom.value = '';
-    };
-</script>
-</html>
+    {#        <textarea id="chat-log" cols="100" rows="20"></textarea><br/>#}
+    {#        <input id="chat-message-input" type="text" size="100"/><br/>#}
+    {#        <input id="chat-message-submit" type="button" value="Send"/>#}
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="{% static 'chat/js/chat_room.js' %}"></script>
+    <script src="{% static 'chat/js/moment.js' %}"></script>
+    <script>
+        var roomName = {{ room_name_json }};
+        {#var author = {{ user_name }};#}
+        var chatSocket = new WebSocket(
+            'ws://' + window.location.host +
+            '/ws/chat/' + roomName + '/');
+
+        chatSocket.onmessage = function (e) {
+            var data = JSON.parse(e.data);
+            var message = data['message'];
+            {#var author = {{ user.username }};#}
+            var author = data['author'];
+            {#var date = new Date(data['date']);#}
+            var date = moment(data['date']).format('Do MMMM YYYY HH:mm');
+            console.log(data);
+
+            {#Как блоками добавлять сообщения?#}
+            {#http://jsfiddle.net/ew3uwL8b/4/#}
+
+            var newdiv = document.createElement("div");
+            debugger;
+            {# norm li cuda input avatar ?#}
+            newdiv.innerHTML = `{% include "chat/message.html" with message='${message}'  author='${author}' time='${date}' %}`;
+            //newdiv.appendTo('div#quest');
+            document.getElementById("chat-log").appendChild(newdiv);
+
+            {#document.querySelector('#chat-log').value += (author + ': ' + message + ' at ' + date + '\n');#}
+        };
+
+        chatSocket.onclose = function (e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.querySelector('#chat-message-input').focus();
+        document.querySelector('#chat-message-input').onkeyup = function (e) {
+            if (e.keyCode === 13) {  // enter, return
+                document.querySelector('#chat-message-submit').click();
+            }
+        };
+
+        document.querySelector('#chat-message-submit').onclick = function (e) {
+            var messageInputDom = document.querySelector('#chat-message-input');
+            var message = messageInputDom.value;
+            chatSocket.send(JSON.stringify({
+                'message': message
+            }));
+
+            messageInputDom.value = '';
+        };
+    </script>
+{% endblock %}

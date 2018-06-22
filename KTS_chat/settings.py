@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'KTS_chat.wsgi.application'
 
 ASGI_APPLICATION = "KTS_chat.routing.application"
 
-
+# inmemory?
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -88,7 +88,7 @@ CHANNEL_LAYERS = {
         },
     },
 }
-
+# CHANNEL_LAYERS = {} #  default
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
@@ -99,6 +99,18 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+# Для кеширования сообщений?
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#         "LOCATION": "redis://127.0.0.1:6379/1",
+#         "TIMEOUT": None,
+#         "OPTIONS": {
+#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+#         }
+#     }
+# }
 
 
 # Password validation
@@ -136,5 +148,33 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
+STATIC_ROOT = ''
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+MEDIA_URL = '/media/'
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = ( os.path.join('static'), )
+
+LOGOUT_REDIRECT_URL = '/chat/login/'
+
+AUTH_USER_MODEL = 'chat.User'
+# LOGIN URL = 'LGH'
+
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#         },
+#     },
+#     'loggers': {
+#         'django.db.backends': {
+#             'level': 'DEBUG',
+#             'handlers': ['console'],
+#         }
+#     },
+# }

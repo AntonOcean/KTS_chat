@@ -1,3 +1,10 @@
 from django.contrib import admin
 
-# Register your models here.
+from chat.models import Message, User, Room
+
+
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ['author', 'text']
+    search_fields = ['author__username', 'text']
+
+admin.site.register((Message, User, Room))

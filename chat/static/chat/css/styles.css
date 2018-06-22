@@ -1,0 +1,48 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    background: white;
+    font-family: Roboto, sans-serif;
+    font-weight: 300;
+}
+
+.chat {
+    height: calc(100% - 60px);
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.input {
+    height: 60px;
+    padding: 10px 40px;
+    box-sizing: border-box;
+}
+
+.message {
+    padding: 10px 20px;
+    background: white;
+    font-size: 12px;
+}
+
+.message__author {
+    margin-bottom: 10px;
+}
+
+.message__avatar {
+    display: inline-block;
+    background: url('avatar.png') no-repeat center;
+    background-size: cover;
+    margin-right: 10px;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+}
+
+.message__time {
+    float: right;
+    color: #b2b2b2;
+    line-height: 30px;
+}
