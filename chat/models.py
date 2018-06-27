@@ -28,11 +28,20 @@ class Message(models.Model):
         return self.text
 
     def to_json(self):
-        print(type(self.author.avatar.url))
+        # print(type(self.author.avatar.url))
         return {
             'message': self.text,
             'author': self.author.username,
             'date': self.date,
+            'avatar_url': self.author.avatar.url
+        }
+
+    def to_json_v2(self):
+        # print(type(self.author.avatar.url))
+        return {
+            'message': self.text,
+            'author': self.author.username,
+            'date': self.date.isoformat(),
             'avatar_url': self.author.avatar.url
         }
 

@@ -1,22 +1,13 @@
 {% extends 'base_base.html' %}
-<!-- chat/templates/chat/index.html -->
-{#<!DOCTYPE html>#}
-{#<html>#}
-{#<head>#}
-{#    <meta charset="utf-8"/>#}
-{#    <title>Chat Rooms</title>#}
-{#</head>#}
-{#<body>#}
+
 {% block content %}
-    <div>
-        Вы вошли как {{ user.username }}   >>>> <a href="{% url 'chat:logout' %}">Выйти</a>
-    </div>
+
     What chat room would you like to enter?<br/>
     <input id="room-name-input" type="text" size="100"/><br/>
     <input id="room-name-submit" type="button" value="Enter"/>
+
 {% endblock %}
-{#</body>#}
-{#<script>#}
+
 {% block javascript %}
     <script>
     document.querySelector('#room-name-input').focus();
@@ -32,5 +23,3 @@
     };
     </script>
 {% endblock %}
-{#</script>#}
-{#</html>#}

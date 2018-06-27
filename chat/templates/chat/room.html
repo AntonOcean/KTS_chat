@@ -1,9 +1,9 @@
-{% extends 'base.html' %}
+{% extends 'base_base.html' %}
 {% load static %}
 
 {% block title %}Chat Room{% endblock %}
 
-{% block content %}
+{% block chat %}
     <div id="chat-log" class="chat">
         {#  как показывать кеш сообщений? и где его хранить?  #}
                 {% for m in messages  %}
@@ -40,7 +40,7 @@
     {#        <input id="chat-message-submit" type="button" value="Send"/>#}
 {% endblock %}
 
-{% block javascripts %}
+{% block javascript %}
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="{% static 'chat/js/chat_room.js' %}"></script>
     <script src="{% static 'chat/js/moment.js' %}"></script>
@@ -58,15 +58,16 @@
             var author = data['author'];
             {#var date = new Date(data['date']);#}
             var date = moment(data['date']).format('Do MMMM YYYY HH:mm');
+            var avatar_url = data['avatar_url'];
             console.log(data);
 
             {#Как блоками добавлять сообщения?#}
             {#http://jsfiddle.net/ew3uwL8b/4/#}
 
             var newdiv = document.createElement("div");
-            debugger;
+
             {# norm li cuda input avatar ?#}
-            newdiv.innerHTML = `{% include "chat/message.html" with message='${message}'  author='${author}' time='${date}' %}`;
+            newdiv.innerHTML = `{% include "chat/message.html" with message='${message}' avatarka='${avatar_url}'  author='${author}' time='${date}' %}`;
             //newdiv.appendTo('div#quest');
             document.getElementById("chat-log").appendChild(newdiv);
 

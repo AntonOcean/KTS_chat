@@ -24,6 +24,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.user_id = self.scope['user'].id
         self.room_id = await self.get_room_id()
         self.user_name = self.scope['user'].username
+        self.avatar_url = self.scope['user'].avatar.url
+        print(self.avatar_url)
+
 
         print(self.channel_layer)
         print(f"i am <{self.scope['user']}> in room <{self.room_id}>")
@@ -59,6 +62,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 'message': message,
                 'author': self.user_name,
                 'date': date.isoformat(),
+                'avatar_url': self.avatar_url,
             }
         )
 
@@ -77,10 +81,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = event['message']
         author = event['author']
         date = event['date']
+        avatar_url = event['avatar_url']
         print('this is', event)
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
             'message': message,
             'author': author,
             'date': date,
+            'avatar_url': avatar_url,
         }))

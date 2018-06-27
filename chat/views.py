@@ -3,13 +3,15 @@ import json
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
+from django.core.paginator import Paginator
+from django.shortcuts import render_to_response
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.views.generic import TemplateView, FormView, CreateView
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 
 from django.views.generic.base import View
-from django.views.generic.list import BaseListView
+from django.views.generic.list import BaseListView, ListView
 
 from chat.forms import ChatLoginForm, ChatCreationForm
 from chat.models import Message, Room
@@ -29,20 +31,43 @@ class ChatView(LoginRequiredMixin,TemplateView):
 # jquery ajax GET room_id last,_message_id
 
 
-# class MessageView(BaseListView):
-#     model = Message
-#     paginate_by = 5
+
+
+class MessageView(ListView):
+    model = Message
+    paginate_by = 20
+
+    template_name = 'chat/message_test.html'
 #
-#     # def get_queryset(self):
-#     #     pass
-#
-#     def get(self, request, *args, **kwargs):
-#         context = super().get_context_data()
-#         return self.render_to_response(context)
+
+    # def render_to_response(self):
 
 
+    # def get(self, request, *args, **kwargs):
+    #     context = self.get_context_data()
+    #     # print(context)
+    #     # context['object_list'] = json.dumps(context['object_list'])
+    #     # print(context['object_list'])
+    #     # print('see it again', context)
+    #     print(context['object_list'])
+    #     return render_to_response(template_name='chat/message_test.html', context=context)
+        # return JsonResponse(context=context, dta)
 
-class RoomView(LoginRequiredMixin,TemplateView):
+    # def get_context_data(self, *, object_list=None, **kwargs):
+    #     # filter by room id
+    #     object_list = [m.to_json_v2() for m in Message.objects.all()]
+    #     print(type(object_list))
+    #     print(object_list)
+    #     return super().get_context_data(object_list=object_list, **kwargs)
+    # def get_queryset(self):
+    #     pass
+    #
+    # def get(self, request, *args, **kwargs):
+    #     context = super().get_context_data()
+    #     return self.render_to_response(context)
+
+
+class RoomView(LoginRequiredMixin, TemplateView):
     template_name = 'chat/room.html'
     # login_url = 'login/'
 

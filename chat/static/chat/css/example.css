@@ -9,7 +9,7 @@ html, body {
 }
 
 .chat {
-    height: calc(100% - 60px);
+    height: calc(100% - 60px - 90px);
     padding: 20px;
     box-sizing: border-box;
     overflow: auto;
