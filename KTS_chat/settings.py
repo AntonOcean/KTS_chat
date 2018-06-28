@@ -79,7 +79,6 @@ WSGI_APPLICATION = 'KTS_chat.wsgi.application'
 
 ASGI_APPLICATION = "KTS_chat.routing.application"
 
-# inmemory?
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -100,7 +99,6 @@ DATABASES = {
     }
 }
 
-# Для кеширования сообщений?
 # CACHES = {
 #     "default": {
 #         "BACKEND": "django_redis.cache.RedisCache",
@@ -161,7 +159,6 @@ STATICFILES_DIRS = ( os.path.join('static'), )
 LOGOUT_REDIRECT_URL = '/chat/login/'
 
 AUTH_USER_MODEL = 'chat.User'
-# LOGIN URL = 'LGH'
 
 # LOGGING = {
 #     'version': 1,

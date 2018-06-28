@@ -1,15 +1,76 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+{% load staticfiles %}
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="{% static "chat/css/example.css" %}">
-    <title>{% block title %}{% endblock %}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>{% block title %}KTS summer{% endblock %}</title>
+
+    <link rel="stylesheet" type="text/css" href="{% static "chat/css/chat_style.css" %}">
+    <link href="{% static 'chat/css/bootstrap.min.css' %}" rel="stylesheet">
 </head>
+
 <body>
-{% block content %}{% endblock %}
+
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <a class="navbar-brand" href="">
+            MyChat
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+
+            <ul class="navbar-nav mr-auto">
+
+                <li class="nav-item {% block new_query %}{% endblock %}">
+                    <a class="nav-link" href="{% url 'chat:index' %}">Главная<span class="sr-only">(current)</span></a>
+                </li>
+
+            </ul>
+
+            <div class=" row my-2 my-lg-0">
+                {% if not user.is_authenticated %}
+                    <a class="col nav-link btn btn-outline-secondary mr-2" href="{% url 'chat:signup' %}">Зарегистрироваться</a>
+                    <a class="col nav-link btn btn-outline-secondary" href="{% url 'chat:login' %}">Войти</a>
+                {% else %}
+                    <span class="col text-center my-auto chat-user">{{ user }}</span>
+                    <a class="col nav-link btn btn-outline-secondary" href="{% url 'chat:logout' %}">Выйти</a>
+                {% endif %}
+            </div>
+
+        </div>
+    </nav>
+</header>
+
+
+{% block chat %}
+{% endblock %}
+
+
+<main role="main" class="container-fluid">
+
+    <div class="container">
+        <div class="row p-3">
+            {% block content_title %}
+            {% endblock %}
+        </div>
+        <div class="row">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+</main>
+
+
+<script src="{% static 'chat/js/bootstrap.min.js' %}"></script>
+{% block javascript %}
+{% endblock %}
 </body>
-{% block javascripts %}{% endblock %}
 </html>

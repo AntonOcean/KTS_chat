@@ -1,0 +1,105 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    background: white;
+    font-family: Roboto, sans-serif;
+    font-weight: 300;
+}
+
+.chat-user {
+    color: #34ce57;
+}
+
+.loading {
+    display: none;
+}
+
+.chat {
+    height: calc(100% - 60px - 90px);
+    padding: 20px;
+    box-sizing: border-box;
+    overflow: auto;
+    transform: rotate(180deg);
+    direction: rtl;
+}
+
+.message {
+    padding: 10px 20px;
+    background: white;
+    font-size: 12px;
+    transition: background 0.2s linear;
+    transform: rotate(180deg);
+}
+
+.message__author {
+    margin-bottom: 10px;
+}
+
+.message__avatar {
+    display: inline-block;
+    margin-right: 10px;
+    border-radius: 50%;
+    background: url('./../img/avatar.png') no-repeat center;
+    background-size: cover;
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+}
+
+.message__time {
+    float: right;
+    color: #b2b2b2;
+    line-height: 30px;
+}
+
+.message__text {
+
+}
+
+.message__name {
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.message:hover {
+    background: #f1f1f1;
+}
+
+.input {
+    height: 60px;
+    padding: 10px 40px;
+    box-sizing: border-box;
+}
+
+.input__attach {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+    background: url('./../img/attach.ico') no-repeat center;
+    background-size: contain;
+    margin-right: 10px;
+}
+
+input {
+    outline: none;
+    width: calc(100% - 40px - 50px);
+}
+
+.input__send {
+    display: inline-block;
+    vertical-align: middle;
+    width: 20px;
+    height: 20px;
+    background: url('./../img/send.png') no-repeat center;
+    background-size: contain;
+    margin-left: 10px;
+}
+
+.btn {
+    cursor: pointer;
+    border-radius: 50%;
+    background-color: white;
+}

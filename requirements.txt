@@ -15,6 +15,7 @@ hyperlink==18.0.0
 idna==2.7
 incremental==17.5.0
 msgpack==0.5.6
+Pillow==5.1.0
 pytz==2018.4
 redis==2.10.6
 six==1.11.0

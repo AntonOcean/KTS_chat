@@ -1,38 +1,31 @@
-{% extends 'base_base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Chat Room{% endblock %}
+{% block title %}{{ room_name_json }}{% endblock %}
+
 
 {% block chat %}
 
+    <div class="chat">
 
-    <div class="chat" id="fuck_scroll" style="transform: rotate(180deg); direction: rtl;">
-{# style="transform: rotate(180deg); direction: rtl; overflow: scroll"#}
-
-    <div id="chat-log"  class="infinite-container">
-        {#  как показывать кеш сообщений? и где его хранить?  #}
-                {% for m in messages  %}
-                    <div class="infinite-item" style="transform: rotate(180deg);">
-{#                    {{ messages }}#}
+        <div id="chat-log" class="infinite-container">
+            <div id="new_message"></div>
+            {% for m in messages %}
+                <div class="infinite-item">
                     {% include "chat/message.html" with message=m.message avatarka=m.avatar_url author=m.author time=m.date %}
-                    </div>
-                {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="loading">
+            Loading...
+        </div>
+
+        {% if page_obj.has_next %}
+            <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}">More</a>
+        {% endif %}
 
     </div>
-
-
-  <div class="loading" style="display: none;">
-    Loading...
-  </div>
-
-
-
-  {% if page_obj.has_next %}
-    <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}">More</a>
-  {% endif %}
-
-    </div>
-
 
     <div class="input">
         <div class="input__attach btn"></div>
@@ -40,20 +33,16 @@
         <div id="chat-message-submit" class="input__send btn"></div>
     </div>
 
-
-
 {% endblock %}
 
+
 {% block javascript %}
-{#    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>#}
-    <script src="{% static 'chat/js/chat_room.js' %}"></script>
-      <script src="{% static 'chat/js/jquery-3.1.1.min.js' %}"></script>
-  <script src="{% static 'chat/js/jquery.waypoints.min.js' %}"></script>
-  <script src="{% static 'chat/js/infinite.min.js' %}"></script>
+    <script src="{% static 'chat/js/jquery-3.1.1.min.js' %}"></script>
+    <script src="{% static 'chat/js/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'chat/js/infinite.min.js' %}"></script>
     <script src="{% static 'chat/js/moment.js' %}"></script>
     <script>
         var roomName = {{ room_name_json }};
-        {#var author = {{ user_name }};#}
         var chatSocket = new WebSocket(
             'ws://' + window.location.host +
             '/ws/chat/' + roomName + '/');
@@ -61,24 +50,16 @@
         chatSocket.onmessage = function (e) {
             var data = JSON.parse(e.data);
             var message = data['message'];
-            {#var author = {{ user.username }};#}
             var author = data['author'];
-            {#var date = new Date(data['date']);#}
             var date = moment(data['date']).format('Do MMMM YYYY HH:mm');
             var avatar_url = data['avatar_url'];
             console.log(data);
 
-            {#Как блоками добавлять сообщения?#}
-            {#http://jsfiddle.net/ew3uwL8b/4/#}
-
             var newdiv = document.createElement("div");
 
-            {# norm li cuda input avatar ?#}
             newdiv.innerHTML = `{% include "chat/message.html" with message='${message}' avatarka='${avatar_url}'  author='${author}' time='${date}' %}`;
-            //newdiv.appendTo('div#quest');
-            document.getElementById("chat-log").appendChild(newdiv);
-
-            {#document.querySelector('#chat-log').value += (author + ': ' + message + ' at ' + date + '\n');#}
+            var parent = document.getElementById("new_message");
+            parent.insertBefore(newdiv, parent.firstChild);
         };
 
         chatSocket.onclose = function (e) {
@@ -103,18 +84,17 @@
         };
     </script>
 
-              <script>
-    var infinite = new Waypoint.Infinite({
-      element: $('.infinite-container')[0],
-        context: $('.chat'),
-      onBeforePageLoad: function () {
-        $('.loading').show();
-      },
-      onAfterPageLoad: function ($items) {
-        $('.loading').hide();
-      }
-    });
-  </script>
-
+    <script>
+        var infinite = new Waypoint.Infinite({
+            element: $('.infinite-container')[0],
+            context: $('.chat'),
+            onBeforePageLoad: function () {
+                $('.loading').show();
+            },
+            onAfterPageLoad: function ($items) {
+                $('.loading').hide();
+            }
+        });
+    </script>
 
 {% endblock %}

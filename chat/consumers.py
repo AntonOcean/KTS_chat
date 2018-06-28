@@ -20,16 +20,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
         await self.accept()
-        print('this is scope', self.scope)
+
         self.user_id = self.scope['user'].id
         self.room_id = await self.get_room_id()
         self.user_name = self.scope['user'].username
         self.avatar_url = self.scope['user'].avatar.url
-        print(self.avatar_url)
-
-
-        print(self.channel_layer)
-        print(f"i am <{self.scope['user']}> in room <{self.room_id}>")
 
     @database_sync_to_async
     def get_room_id(self):
@@ -45,14 +40,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # Receive message from WebSocket
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        print(text_data_json)
         message = text_data_json['message']
         date = timezone.now()
 
-        # сохрание в бд сообщения асинхронно
-
         await self.save_message_to_db(message)
-
 
         # Send message to room group
         await self.channel_layer.group_send(
@@ -82,7 +73,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         author = event['author']
         date = event['date']
         avatar_url = event['avatar_url']
-        print('this is', event)
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
             'message': message,
