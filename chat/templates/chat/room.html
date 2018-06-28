@@ -4,30 +4,36 @@
 {% block title %}Chat Room{% endblock %}
 
 {% block chat %}
-    <div id="chat-log" class="chat">
+
+
+    <div class="chat" id="fuck_scroll" style="transform: rotate(180deg); direction: rtl;">
+{# style="transform: rotate(180deg); direction: rtl; overflow: scroll"#}
+
+    <div id="chat-log"  class="infinite-container">
         {#  как показывать кеш сообщений? и где его хранить?  #}
                 {% for m in messages  %}
+                    <div class="infinite-item" style="transform: rotate(180deg);">
 {#                    {{ messages }}#}
                     {% include "chat/message.html" with message=m.message avatarka=m.avatar_url author=m.author time=m.date %}
+                    </div>
                 {% endfor %}
 
-{#        <div class="message">#}
-{##}
-{#            <div class="message__author">#}
-{#                <div class="message__avatar"><img src="{{ user.avatar.url }}" height="30" width="30"></div>#}
-{#                <div class="message__name">{{ user }}</div>#}
-{#                <div class="message__time">{% now "jS F Y H:i" %}</div>#}
-{#            </div>#}
-{#            <div class="message__text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis dignissimos#}
-{#                dolore libero pariatur! Animi aut dolorem earum eum excepturi iure, laborum magnam minus nam, neque#}
-{#                pariatur saepe sint ullam. Ab amet consequuntur debitis delectus dicta dolorum eius facilis, fuga harum#}
-{#                id incidunt ipsum laborum modi necessitatibus quidem? Autem, deleniti facilis neque perferendis#}
-{#                perspiciatis totam. Cumque, voluptatem.#}
-{#            </div>#}
-{##}
-{#        </div>#}
+    </div>
+
+
+  <div class="loading" style="display: none;">
+    Loading...
+  </div>
+
+
+
+  {% if page_obj.has_next %}
+    <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}">More</a>
+  {% endif %}
 
     </div>
+
+
     <div class="input">
         <div class="input__attach btn"></div>
         <input id="chat-message-input" type="text" value="" placeholder="Введите сообщение"/>
@@ -35,14 +41,15 @@
     </div>
 
 
-    {#        <textarea id="chat-log" cols="100" rows="20"></textarea><br/>#}
-    {#        <input id="chat-message-input" type="text" size="100"/><br/>#}
-    {#        <input id="chat-message-submit" type="button" value="Send"/>#}
+
 {% endblock %}
 
 {% block javascript %}
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{#    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>#}
     <script src="{% static 'chat/js/chat_room.js' %}"></script>
+      <script src="{% static 'chat/js/jquery-3.1.1.min.js' %}"></script>
+  <script src="{% static 'chat/js/jquery.waypoints.min.js' %}"></script>
+  <script src="{% static 'chat/js/infinite.min.js' %}"></script>
     <script src="{% static 'chat/js/moment.js' %}"></script>
     <script>
         var roomName = {{ room_name_json }};
@@ -95,4 +102,19 @@
             messageInputDom.value = '';
         };
     </script>
+
+              <script>
+    var infinite = new Waypoint.Infinite({
+      element: $('.infinite-container')[0],
+        context: $('.chat'),
+      onBeforePageLoad: function () {
+        $('.loading').show();
+      },
+      onAfterPageLoad: function ($items) {
+        $('.loading').hide();
+      }
+    });
+  </script>
+
+
 {% endblock %}

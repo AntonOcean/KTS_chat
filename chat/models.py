@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AbstractUser
+from django.contrib.postgres.indexes import BrinIndex
 from django.db import models
 
 
@@ -14,15 +15,17 @@ class Room(models.Model):
 
 
 class Message(models.Model):
-    author = models.ForeignKey(User, verbose_name='Пользователь', on_delete=models.CASCADE)
+    author = models.ForeignKey(User, verbose_name='Пользователь', on_delete=models.CASCADE, db_index=False)
     text = models.TextField(verbose_name='Текст')
     date = models.DateTimeField(verbose_name='Дата создания', auto_now_add=True)
-    room = models.ForeignKey(Room, verbose_name='Комната', on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, verbose_name='Комната', on_delete=models.CASCADE, db_index=False)
 
     class Meta:
         verbose_name = 'Сообщение'
         verbose_name_plural = 'Сообщения'
-        # индекс по дате
+        indexes = (
+            BrinIndex(fields=['date']),
+        )
 
     def __str__(self):
         return self.text
